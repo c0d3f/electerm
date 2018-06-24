@@ -33,26 +33,6 @@ const e = prefix('sftp')
 const m = prefix('menu')
 const c = prefix('common')
 
-const computePos = (e, isBg, height, ) => {
-  let {clientX, clientY} = e
-  let res = {
-    left: clientX,
-    top: clientY
-  }
-  if (window.innerHeight < res.top + height + 10) {
-    res.top = res.top - height
-  }
-  if (window.innerWidth < res.left + contextMenuWidth + 10) {
-    res.left = res.left - contextMenuWidth
-  }
-  res.top = res.top > 0 ? res.top : 0
-  return res
-}
-
-const fileItemCls = 'sftp-item'
-const onDragCls = 'sftp-ondrag'
-const onDragOverCls = 'sftp-dragover'
-
 export default class FileSection extends React.Component {
 
   constructor(props) {
@@ -74,6 +54,26 @@ export default class FileSection extends React.Component {
       })
     }
   }
+
+  computePos = (e, isBg, height) => {
+    let {clientX, clientY} = e
+    let res = {
+      left: clientX,
+      top: clientY
+    }
+    if (window.innerHeight < res.top + height + 10) {
+      res.top = res.top - height
+    }
+    if (window.innerWidth < res.left + contextMenuWidth + 10) {
+      res.left = res.left - contextMenuWidth
+    }
+    res.top = res.top > 0 ? res.top : 0
+    return res
+  }
+  
+  fileItemCls = 'sftp-item'
+  onDragCls = 'sftp-ondrag'
+  onDragOverCls = 'sftp-dragover'
 
   duplicate = async (fromFile, toFile) => {
     let {type, path, name} = toFile
@@ -201,18 +201,18 @@ export default class FileSection extends React.Component {
   }
 
   onDrag = () => {
-    addClass(this.dom, onDragCls)
+    addClass(this.dom, this.onDragCls)
   }
 
   onDragEnter = e => {
     let {target} = e
     if (
-      !hasClass(target, fileItemCls)
+      !hasClass(target, this.fileItemCls)
     ) {
       return e.preventDefault()
     }
     this.dropTarget = target
-    addClass(target, onDragOverCls)
+    addClass(target, this.onDragOverCls)
   }
 
   onDragExit = () => {
@@ -221,7 +221,7 @@ export default class FileSection extends React.Component {
 
   onDragLeave = e => {
     let {target} = e
-    removeClass(target, onDragOverCls)
+    removeClass(target, this.onDragOverCls)
   }
 
   onDragOver = e => {
@@ -266,7 +266,7 @@ export default class FileSection extends React.Component {
       return
     }
     let fromFile = await this.getDropFileList(e.dataTransfer)
-    while (!target.className.includes(fileItemCls)) {
+    while (!target.className.includes(this.fileItemCls)) {
       target = target.parentNode
     }
     let id = target.getAttribute('data-id')
@@ -286,9 +286,9 @@ export default class FileSection extends React.Component {
     this.props.modifier({
       onDrag: false
     })
-    removeClass(this.dom, onDragCls)
-    document.querySelectorAll('.' + onDragOverCls).forEach((d) => {
-      removeClass(d, onDragOverCls)
+    removeClass(this.dom, this.onDragCls)
+    document.querySelectorAll('.' + this.onDragOverCls).forEach((d) => {
+      removeClass(d, this.onDragOverCls)
     })
     if (e && e.dataTransfer) {
       let dt = e.dataTransfer
@@ -943,7 +943,7 @@ export default class FileSection extends React.Component {
       .length * contextMenuHeight + contextMenuPaddingTop * 2
     this.props.openContextMenu({
       content,
-      pos: computePos(e, id, height)
+      pos: this.computePos(e, id, height)
     })
   }
 

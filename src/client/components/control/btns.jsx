@@ -12,15 +12,6 @@ const c = prefix('common')
 const m = prefix('menu')
 const h = prefix('transferHistory')
 
-const commonSelectProps = {
-  showSearch: true,
-  optionFilterProp: 'children',
-  notFoundContent: e('notFoundContent'),
-  dropdownMatchSelectWidth: false,
-  className: 'iblock width120 mg1r'
-}
-const sshConfigItems = getGlobal('sshConfigItems')
-
 export default function Btns(props) {
 
   let {
@@ -37,6 +28,14 @@ export default function Btns(props) {
     openTerminalThemes,
     transferHistory
   } = props
+  const commonSelectProps = {
+    showSearch: true,
+    optionFilterProp: 'children',
+    notFoundContent: e('notFoundContent'),
+    dropdownMatchSelectWidth: false,
+    className: 'iblock width120 mg1r'
+  }
+  const sshConfigItems = getGlobal('sshConfigItems')
   return (
     <div className={
       `btns pd1 borderb fix${showControl ? '' : ' hide'}`
